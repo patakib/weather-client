@@ -7,7 +7,7 @@ import requests
 from io import StringIO
 
 
-data = requests.get("http://localhost:8080/weather").json()
+data = requests.get("http://0.0.0.0:8080/weather").json()
 df = pd.json_normalize(data)
 df = df.rename(
     columns={
@@ -30,8 +30,8 @@ df["Időpont"] = df["Időpont"].dt.strftime("%Y-%m-%d %H:%M")
 app = Dash(__name__)
 
 app.layout = html.Div([
-    html.H1(children='Supercool Weather App', style={'textAlign':'center'}),
-    dcc.Dropdown(df["Város"].unique(), 'Sopron', id='dropdown-selection'),
+    html.H1(children='Supercool Weather App', style={"textAlign": "center", "margin-bottom": 50}),
+    dcc.Dropdown(df["Város"].unique(), 'Sopron', id='dropdown-selection', style={"margin-bottom": 30}),
     dcc.Tabs([
         dcc.Tab(label='Táblázat', children=[
             dash_table.DataTable(data=df[[
@@ -52,9 +52,15 @@ app.layout = html.Div([
                 dcc.Tab(label='Csapadék', children=[
                     dcc.Graph(figure={}, id='prec_graph')
                 ])
-            ])
+            ], colors={
+                "background": "lightblue",
+                "border": "darkblue"
+            })
         ])
-    ])
+    ], colors={
+            "background": "lightgreen",
+            "border": "white",
+        })
 ])
 
 @callback(
